@@ -1,0 +1,21 @@
+{
+  "name": "sdv503-a2-study-tracker-13536795",
+  "version": "1.0.0",
+  "description": "Study tracker application written in JavaScript, for assignment 2 of SDV503, run with node.js",
+  "main": "index.js",
+  "scripts": {
+    "studytracker": "study-tracker.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daniel-lee3/sdv503-a2-study-tracker-13536795.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/daniel-lee3/sdv503-a2-study-tracker-13536795/issues"
+  },
+  "homepage": "https://github.com/daniel-lee3/sdv503-a2-study-tracker-13536795#readme"
+}
