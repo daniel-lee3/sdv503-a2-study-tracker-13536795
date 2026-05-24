@@ -26,6 +26,8 @@ async function main() {
         if (issues.length > 0) {
             throw Error(issues.join(', '))
         }
+    } catch(Error) {
+        console.log(`Something went wrong.\n    %c${Error}`, 'color: red;')
     } finally {
         rl.close();
     }
