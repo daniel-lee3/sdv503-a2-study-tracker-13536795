@@ -1,5 +1,6 @@
 const { stdin, stdout } = require('node:process');
 const readline = require('node:readline');
+const fs = require('node:fs');
 
 const studyPeriods = {
     // For the data structure I decided the index will be the topic the user inputs
@@ -35,11 +36,23 @@ async function main() {
         if (Number.isNaN(minutes)) {
             issues.push('Study time must be a number');
         } else if (minutes <= 0) {
-            issues.push('Study time must be longer than 0 minutes')
+            issues.push('Study time must be longer than 0 minutes');
         }
         if (issues.length > 0) {
-            throw Error(issues.join(', '))
+            throw Error(issues.join(', '));
         }
+
+        if (topicInput !== topic) {
+            console.log(`Topic storing as ${topic}`);
+        }
+
+        if (studyPeriods[topic] == undefined) {
+            studyPeriods[topic] = [];
+        }
+        studyPeriods[topic].push({
+            timeRecorded: Date.now(),
+            minutes: minutes
+        })
     } catch(Error) {
         console.log(`Something went wrong.\n    %c${Error}`, 'color: red;')
     } finally {
