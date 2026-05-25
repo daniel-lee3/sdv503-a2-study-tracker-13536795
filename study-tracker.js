@@ -130,7 +130,7 @@ async function loadJSON(filePath, defaultValue) {
 async function writeJSON(filePath, data) {
     const jsonData = JSON.stringify(data, null, 2);
 
-    fs.promises.writeFile(filePath, jsonData)
+    await fs.promises.writeFile(filePath, jsonData)
 }
 
 main()
