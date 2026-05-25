@@ -16,17 +16,18 @@ async function main() {
     console.log('   2. View full history');
     console.log('   3. View history');
     console.log();
-    const input = await rl.question('Enter input: ');
+    const input = (await rl.question('Enter input: ')).trim();
     rl.close();
 
     switch(input) {
         case '1':
             const newData = await addStudyPeriod();
+            if (studyPeriods[newData.topic] === undefined) studyPeriods[newData.topic] = [];
             studyPeriods[newData.topic].push({
                 timeRecorded: newData.timeRecorded,
                 minutes: newData.minutes
             });
-            writeJSON(filePath, studyPeriods);
+            await writeJSON(filePath, studyPeriods);
             break;
         case '2':
             const overviewString = await getOverview(studyPeriods);
@@ -36,6 +37,8 @@ async function main() {
             const partialOverviewString = await getPartialOverview(studyPeriods);
             console.log(partialOverviewString);
             break;
+        default:
+            console.log('Please enter an input of "1", "2", or "3"')
     }
 }
 
@@ -55,32 +58,23 @@ async function addStudyPeriod() {
         const minutes = Number(minutesInput);
         
         const issues = [];
-        if (topic.length === 0) {
-            issues.push('Topic can not be blank');
-        }
+        if (topic.length === 0) issues.push('Topic can not be blank');
         if (Number.isNaN(minutes)) {
             issues.push('Study time must be a number');
         } else if (minutes <= 0) {
             issues.push('Study time must be longer than 0 minutes');
         }
-        if (issues.length > 0) {
-            throw Error(issues.join(', '));
-        }
+        if (issues.length > 0) throw Error(issues.join(', '));
 
-        if (topicInput !== topic) {
-            console.log(`Topic storing as "${topic}"`);
-        }
+        if (topicInput !== topic) console.log(`Topic storing as "${topic}"`);
 
-        if (studyPeriods[topic] == undefined) {
-            studyPeriods[topic] = [];
-        }
         data = {
             topic: topic,
             timeRecorded: Date.now(),
             minutes: minutes
         }
     } catch(Error) {
-        console.log(`Something went wrong.\n    %c${Error}`, 'color: red;');
+        console.log(`Something went wrong.\n    ${Error}`);
     } finally {
         rl.close();
     }
@@ -94,8 +88,16 @@ async function getPartialOverview(overviewInfo) {
         output: stdout
     });
 
-    const days = await rl.question("How many days of history would you like to see? ");
+    const daysInput = await rl.question("How many days of history would you like to see? ");
+    const days = Number(daysInput);
     rl.close();
+
+    if (Number.isNaN(days)) {
+        throw Error('Days must be a valid number');
+    } else if (days <= 0) {
+        throw Error('Days must be a higher number than 0');
+    }
+
     const filterCallback = (value) => value.timeRecorded >= Date.now()-(86400 * days * 1000);
     return await getOverview(overviewInfo, filterCallback);
 }
@@ -104,10 +106,11 @@ async function getOverview(overviewInfo, filterCallback = () => true) {
     let overview = [];
     for (let topic in overviewInfo) {
         const history = overviewInfo[topic].filter(filterCallback)
+        if (history.length === 0) continue;
         overview.push(`---------- ${topic} ----------`)
-        history.map((entry, index) => {
+        history.forEach(entry => {
             overview.push(`${new Date(entry.timeRecorded).toDateString()}: ${entry.minutes} minutes`)
-        })
+        });
         overview.push(`--------------------`)
         overview.push(`Total time: ${history.reduce((sum, entry) => sum + entry.minutes, 0)} minutes\n`)
     }
