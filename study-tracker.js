@@ -115,6 +115,7 @@ async function getOverview(overviewInfo, filterCallback = () => true) {
         overview.push(`--------------------`)
         overview.push(`Total time: ${history.reduce((sum, entry) => sum + entry.minutes, 0)} minutes\n`)
     }
+    if (overview.length === 0) return '- No history found -'
     return overview.join('\n')
 }
 
