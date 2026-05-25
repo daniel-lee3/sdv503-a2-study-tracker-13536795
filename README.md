@@ -12,3 +12,17 @@ Data is stored as the following
     }
 ]
 ```
+
+## How to use
+Simply run study-tracker.js, this will open up a terminal
+In the terminal you can type either 1, 2 or 3.
+
+If there is no data, **1** is most recommended.
+
+### 1.
+- Enter in a topic.
+- Enter the amount of time you studied for in minutes.
+### 2.
+There is no input for option 2.
+### 3.
+- Enter the amount of days you would like to view from today.
