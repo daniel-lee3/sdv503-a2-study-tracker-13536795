@@ -22,6 +22,7 @@ async function main() {
     switch(input) {
         case '1':
             const newData = await addStudyPeriod();
+            if (!newData) break;
             if (studyPeriods[newData.topic] === undefined) studyPeriods[newData.topic] = [];
             studyPeriods[newData.topic].push({
                 timeRecorded: newData.timeRecorded,
@@ -35,6 +36,7 @@ async function main() {
             break;
         case '3':
             const partialOverviewString = await getPartialOverview(studyPeriods);
+            if (!partialOverviewString) break;
             console.log(partialOverviewString);
             break;
         default:
@@ -53,6 +55,7 @@ async function addStudyPeriod() {
     try {
         const topicInput = await rl.question('What is the topic? ');
         const minutesInput = await rl.question('How long did you study for? (in minutes) ');
+        rl.close();
 
         const topic = topicInput.trim();
         const minutes = Number(minutesInput);
@@ -75,8 +78,6 @@ async function addStudyPeriod() {
         }
     } catch(Error) {
         console.log(`Something went wrong.\n    ${Error}`);
-    } finally {
-        rl.close();
     }
 
     return data
