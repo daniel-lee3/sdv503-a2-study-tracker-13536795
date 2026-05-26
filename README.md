@@ -7,7 +7,7 @@ Data is stored as the following
 ```json
 [
     {
-        timeRecorded: timestamp
+        timeRecorded: timestamp,
         minutes: number
     }
 ]
