@@ -28,3 +28,7 @@ If there is no data, **1** is most recommended.
 There is no input for option 2.
 ### 3.
 - Enter the amount of days you would like to view from today.
+
+## Setup
+Study tracker only requires a working installation of [node.js](https://nodejs.org/).
+study-tracker.js itself has no dependencies and should work on its own.
