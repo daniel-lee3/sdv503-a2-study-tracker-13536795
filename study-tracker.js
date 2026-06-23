@@ -62,8 +62,8 @@ async function addStudyPeriod() {
         
         const issues = [];
         if (topic.length === 0) issues.push('Topic can not be blank');
-        if (Number.isNaN(minutes)) {
-            issues.push('Study time must be a number');
+        if (Number.isNaN(minutes) || minutes % 1 !== 0) {
+            issues.push('Study time must be a whole number');
         } else if (minutes <= 0) {
             issues.push('Study time must be longer than 0 minutes');
         }
@@ -105,18 +105,24 @@ async function getPartialOverview(overviewInfo) {
 
 async function getOverview(overviewInfo, filterCallback = () => true) {
     let overview = [];
+    let totalTime = 0;
     for (let topic in overviewInfo) {
-        const history = overviewInfo[topic].filter(filterCallback)
+        const history = overviewInfo[topic].filter(filterCallback);
         if (history.length === 0) continue;
-        overview.push(`---------- ${topic} ----------`)
+        overview.push(`---------- ${topic} ----------`);
         history.forEach(entry => {
-            overview.push(`${new Date(entry.timeRecorded).toDateString()}: ${entry.minutes} minutes`)
+            overview.push(`${new Date(entry.timeRecorded).toDateString()}: ${entry.minutes} minutes`);
         });
-        overview.push(`--------------------`)
-        overview.push(`Total time: ${history.reduce((sum, entry) => sum + entry.minutes, 0)} minutes\n`)
+        overview.push(`--------------------`);
+        const totalMinutes = history.reduce((sum, entry) => sum + entry.minutes, 0);
+        overview.push(`Total time: ${totalMinutes} minutes\n`);
+        totalTime += totalMinutes;
     }
-    if (overview.length === 0) return '- No history found -'
-    return overview.join('\n')
+    if (overview.length === 0) { return '- No history found -' } else {
+        overview.push(`--------------------`);
+        overview.push(`Total time: ${totalTime} minutes\n`);
+    }
+    return overview.join('\n');
 }
 
 async function loadJSON(filePath, defaultValue) {
